@@ -4,6 +4,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
+main_domain = 'https://dentalia.com/'
 
 def get_soup() -> BeautifulSoup:
     url = 'https://dentalia.com/clinicas'
@@ -28,8 +29,8 @@ def get_working_hour(text: str) -> list:
             ]
 
 
-def parse():
-    clinics_info: list = []
+def parse() -> list[dict]:
+    clinics_info: list[dict] = []
     soup = get_soup()
     clinics = soup.find_all('div', 'dg-map_clinic-card w-dyn-item')
 
@@ -43,10 +44,10 @@ def parse():
                 'working_hours': get_working_hour(clinic.text),
             }
         )
-
-    with open('site1result.json', 'w', encoding='utf-8') as fp:
-        json.dump(clinics_info, fp, ensure_ascii=False)
+    return clinics_info
 
 
 if __name__ == '__main__':
-    parse()
+    data = parse()
+    with open('site1result.json', 'w', encoding='utf-8') as fp:
+        json.dump(data, fp, ensure_ascii=False)

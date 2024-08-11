@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from geopy.geocoders import GoogleV3
 
+main_domain = 'https://www.santaelena.com.co'
 
 def get_soup(url: str) -> BeautifulSoup:
     st_accept = "text/html"
@@ -78,7 +79,7 @@ def get_coords(address: str) -> list[str]:
     if api_key:
         geolocator = GoogleV3(api_key=api_key, user_agent="tutorial")
         location = geolocator.geocode(address)
-        return [location.latitude, location.longitude]
+        return [str(location.latitude), str(location.longitude)]
     else:
         print('Check it out .env file for the presence of GoogleMaps api_key')
         return ['0', '0']
@@ -128,7 +129,7 @@ def get_working_hours(extract: dict) -> list[str]:
     return working_hours
 
 
-def parse():
+def parse() -> list[dict]:
     parsed_shops: list[dict] = []
     urls: list = [
         'tienda-medellin/',
@@ -150,10 +151,10 @@ def parse():
                     'working_hours': get_working_hours(value),
                 }
             )
-
-    with open('site3result.json', 'w', encoding='utf-8') as fp:
-        json.dump(parsed_shops, fp, ensure_ascii=False)
+    return parsed_shops
 
 
 if __name__ == '__main__':
-    parse()
+    data = parse()
+    with open('site3result.json', 'w', encoding='utf-8') as fp:
+        json.dump(data, fp, ensure_ascii=False)

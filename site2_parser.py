@@ -4,6 +4,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
+main_domain = 'https://yapdomik.ru/'
 
 def get_soup(url: str) -> BeautifulSoup:
     st_accept = "text/html"
@@ -65,7 +66,7 @@ def get_coords(extracted_shop: dict) -> list[str]:
     return [extracted_shop['coord']['latitude'], extracted_shop['coord']['longitude'], ]
 
 
-def parse():
+def parse() -> list[dict]:
     parsed_shops: list[dict] = []
     urls: list = [
         'https://omsk.yapdomik.ru/about',
@@ -88,10 +89,10 @@ def parse():
                     'working_hours': get_working_hours(shop),
                 }
             )
-
-    with open('site2result.json', 'w', encoding='utf-8') as fp:
-        json.dump(parsed_shops, fp, ensure_ascii=False)
+    return parsed_shops
 
 
 if __name__ == '__main__':
-    parse()
+    data = parse()
+    with open('site2result.json', 'w', encoding='utf-8') as fp:
+        json.dump(data, fp, ensure_ascii=False)

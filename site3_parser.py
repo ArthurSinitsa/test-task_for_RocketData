@@ -75,9 +75,13 @@ def get_address(soup: BeautifulSoup, extract: dict) -> str:
 def get_coords(address: str) -> list[str]:
     load_dotenv()
     api_key = os.getenv('API_KEY')
-    geolocator = GoogleV3(api_key=api_key, user_agent="tutorial")
-    location = geolocator.geocode(address)
-    return [location.latitude, location.longitude]
+    if api_key:
+        geolocator = GoogleV3(api_key=api_key, user_agent="tutorial")
+        location = geolocator.geocode(address)
+        return [location.latitude, location.longitude]
+    else:
+        print('Check it out .env file for the presence of GoogleMaps api_key')
+        return ['0', '0']
 
 
 def get_phones(extract: dict) -> list[str]:
@@ -151,4 +155,5 @@ def parse():
         json.dump(parsed_shops, fp, ensure_ascii=False)
 
 
-parse()
+if __name__ == '__main__':
+    parse()
